@@ -18,8 +18,8 @@ extension Object {
 //    }
 //}
 
-extension Reactive where Base: Realm {
-    func save<R: RealmRepresentable>(entity: R, update: Bool = true) -> Observable<Void> where R.RealmType: Object  {
+extension Reactive where Base == Realm {
+    func save<R: RealmRepresentable>(entity: R, update: Realm.UpdatePolicy = .all) -> Observable<Void> where R.RealmType: Object  {
         return Observable.create { observer in
             do {
                 try self.base.write {

@@ -53,16 +53,16 @@ final class EditToDoViewController: UIViewController {
             .forEach({$0.disposed(by: disposeBag)})
     }
 
-    var toDoBinding: UIBindingObserver<EditToDoViewController, ToDoItem> {
-        return UIBindingObserver(UIElement: self, binding: { (vc, toDoItem) in
+    var toDoBinding: Binder<ToDoItem> {
+        return Binder(self, binding: { (vc, toDoItem) in
             vc.titleTextField.text = toDoItem.title
             vc.detailsTextView.text = toDoItem.body
             vc.title = toDoItem.title
         })
     }
     
-    var errorBinding: UIBindingObserver<EditToDoViewController, Error> {
-        return UIBindingObserver(UIElement: self, binding: { (vc, _) in
+    var errorBinding: Binder<Error> {
+        return Binder(self, binding: { (vc, _) in
             let alert = UIAlertController(title: "Save Error",
                                           message: "Something went wrong",
                                           preferredStyle: .alert)
@@ -75,11 +75,9 @@ final class EditToDoViewController: UIViewController {
     }
 }
 
-
-
 extension Reactive where Base: UITextView {
-    var isEditable: UIBindingObserver<UITextView, Bool> {
-        return UIBindingObserver(UIElement: self.base, binding: { (textView, isEditable) in
+    var isEditable: Binder<Bool> {
+        return Binder(self.base, binding: { (textView, isEditable) in
             textView.isEditable = isEditable
         })
     }
