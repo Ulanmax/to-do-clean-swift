@@ -43,11 +43,11 @@ final class Repository<T:RealmRepresentable>: AbstractRepository where T == T.Re
                         sortDescriptors: [NSSortDescriptor] = []) -> Observable<[T]> {
         return Observable.deferred {
                     let realm = self.realm
-                    let objects = realm.objects(T.RealmType.self)
-//            The implementation is broken since we are not using predicate and sortDescriptors
-//            but it cause compiler to crash with xcode 8.3 ¯\_(ツ)_/¯
-//                            .filter(predicate)
-//                            .sorted(by: sortDescriptors.map(SortDescriptor.init))
+                    var objects = realm.objects(T.RealmType.self)
+                        .filter(predicate)
+                    if !sortDescriptors.isEmpty {
+                        objects = objects.sorted(by: sortDescriptors.map(SortDescriptor.init))
+                    }
 
                     return Observable.array(from: objects)
                             .mapToDomain()
